@@ -1,0 +1,17 @@
+v 1.0.5, Sep 21, 2018
+  -moved from subversion to github
+
+v 1.0.4, Jun 1, 2018
+  -logging tune-up
+
+v 1.0.3, Dec 19, 2017
+  -updated to java 1.8; updated jars; logging tune-up
+
+v 1.0.2, Jan 5, 2017
+  -updated build from ANT to GRADLE
+
+v 1.0.1, Dec 30, 2014
+  -updated jars, improved summary email
+
+v 1.0, Jun 12, 2014
+  -first pipeline version, load Human Proteome Map external db ids into RGD
