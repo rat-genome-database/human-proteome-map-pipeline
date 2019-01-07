@@ -9,6 +9,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.FileSystemResource;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,8 +24,7 @@ public class Manager {
     private String version;
     private String pipelineName;
 
-    Logger log = Logger.getLogger("core");
-    Logger logStatus = Logger.getLogger("status");
+    Logger log = Logger.getLogger("status");
 
     public static void main(String[] args) throws Exception {
 
@@ -36,7 +36,6 @@ public class Manager {
             manager.run();
         }catch (Exception e) {
             manager.log.error(e);
-            manager.logStatus.error(e);
             throw e;
         }
     }
@@ -51,35 +50,35 @@ public class Manager {
 
         String msg = getVersion();
         log.info(msg);
-        logStatus.info(msg);
 
         msg = dao.getConnectionInfo();
-        log.info(msg);
-        logStatus.info(msg);
+        log.info("   "+msg);
+
+        SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        log.info("   started at "+sdt.format(new Date(startTime)));
 
         String species = SpeciesType.getCommonName(speciesTypeKey);
         msg = "START: " + getPipelineName() + " ID generation starting for " + species;
         log.info(msg);
-        logStatus.info(msg);
 
         // QC
-        log.info("QC: get "+getPipelineName()+" Ids in RGD for "+species);
+        log.debug("QC: get "+getPipelineName()+" Ids in RGD for "+species);
         List<XdbId> idsInRgd = dao.getHumanProteomeMapIds(speciesTypeKey, getPipelineName());
-        log.info("QC: get incoming "+getPipelineName()+" Ids for "+species);
+        log.debug("QC: get incoming "+getPipelineName()+" Ids for "+species);
         List<XdbId> idsIncoming = getIncomingIds(speciesTypeKey);
 
         // determine to-be-inserted Human Proteome Map ids
-        log.info("QC: determine to-be-inserted "+getPipelineName()+" Ids");
+        log.debug("QC: determine to-be-inserted "+getPipelineName()+" Ids");
         List<XdbId> idsToBeInserted = new ArrayList<XdbId>(idsIncoming);
         idsToBeInserted.removeAll(idsInRgd);
 
         // determine matching Human Proteome Map ids
-        log.info("QC: determine matching "+getPipelineName()+" Ids");
+        log.debug("QC: determine matching "+getPipelineName()+" Ids");
         List<XdbId> idsMatching = new ArrayList<XdbId>(idsIncoming);
         idsMatching.retainAll(idsInRgd);
 
         // determine to-be-deleted Human Proteome Map ids
-        log.info("QC: determine to-be-deleted "+getPipelineName()+" Ids");
+        log.debug("QC: determine to-be-deleted "+getPipelineName()+" Ids");
         idsInRgd.removeAll(idsIncoming);
         List<XdbId> idsToBeDeleted = idsInRgd;
 
@@ -88,31 +87,28 @@ public class Manager {
         if( !idsToBeInserted.isEmpty() ) {
             msg = "  inserting "+getPipelineName()+" ids for "+species+": "+idsToBeInserted.size();
             log.info(msg);
-            logStatus.info(msg);
             dao.insertXdbs(idsToBeInserted);
         }
 
         if( !idsToBeDeleted.isEmpty() ) {
             msg = "  deleting "+getPipelineName()+" ids for "+species+": "+idsToBeDeleted.size();
             log.info(msg);
-            logStatus.info(msg);
             dao.deleteXdbIds(idsToBeDeleted);
         }
 
         if( !idsMatching.isEmpty() ) {
             msg = "  matching "+getPipelineName()+" ids for "+species+": "+idsMatching.size();
             log.info(msg);
-            logStatus.info(msg);
             dao.updateModificationDate(idsMatching);
         }
 
         msg = "END: "+getPipelineName() + " ID generation complete for " + species;
         log.info(msg);
-        logStatus.info(msg);
 
         msg = "===    time elapsed: "+ Utils.formatElapsedTime(startTime, System.currentTimeMillis());
         log.info(msg);
-        logStatus.info(msg);
+
+        log.info("");
     }
 
     List<XdbId> getIncomingIds(int speciesTypeKey) throws Exception {
