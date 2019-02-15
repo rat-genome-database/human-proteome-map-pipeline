@@ -1,3 +1,6 @@
+v 1.0.7, Feb 15, 2019
+  -updated dependencies
+
 v 1.0.6, Jan 7, 2019
   -updated build.gradle and tuned up summary email
 
