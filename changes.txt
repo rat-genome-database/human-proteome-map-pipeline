@@ -1,3 +1,6 @@
+v 1.0.8, Apr 17, 2019
+  -updated dependencies
+
 v 1.0.7, Feb 15, 2019
   -updated dependencies
 
