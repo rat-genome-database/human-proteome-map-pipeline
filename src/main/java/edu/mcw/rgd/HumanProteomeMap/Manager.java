@@ -58,12 +58,13 @@ public class Manager {
         log.info("   started at "+sdt.format(new Date(startTime)));
 
         String species = SpeciesType.getCommonName(speciesTypeKey);
-        msg = "START: " + getPipelineName() + " ID generation starting for " + species;
+        msg = "START: " + getPipelineName() + " ID starting for " + species;
         log.info(msg);
 
         // QC
         log.debug("QC: get "+getPipelineName()+" Ids in RGD for "+species);
         List<XdbId> idsInRgd = dao.getHumanProteomeMapIds(speciesTypeKey, getPipelineName());
+        int originalCount = idsInRgd.size();
         log.debug("QC: get incoming "+getPipelineName()+" Ids for "+species);
         List<XdbId> idsIncoming = getIncomingIds(speciesTypeKey);
 
@@ -81,7 +82,6 @@ public class Manager {
         log.debug("QC: determine to-be-deleted "+getPipelineName()+" Ids");
         idsInRgd.removeAll(idsIncoming);
         List<XdbId> idsToBeDeleted = idsInRgd;
-
 
         // loading
         if( !idsToBeInserted.isEmpty() ) {
@@ -101,6 +101,11 @@ public class Manager {
             log.info(msg);
             dao.updateModificationDate(idsMatching);
         }
+
+        int countAdj = idsToBeInserted.size() - idsToBeDeleted.size();
+        int newCount = originalCount + countAdj;
+        msg = String.format("  new total of %s ids for %s: %d (%+d)", getPipelineName(), species, newCount, countAdj);
+        log.info(msg);
 
         msg = "END: "+getPipelineName() + " ID generation complete for " + species;
         log.info(msg);
