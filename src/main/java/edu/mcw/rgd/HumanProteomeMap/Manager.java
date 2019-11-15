@@ -58,8 +58,6 @@ public class Manager {
         log.info("   started at "+sdt.format(new Date(startTime)));
 
         String species = SpeciesType.getCommonName(speciesTypeKey);
-        msg = "START: " + getPipelineName() + " ID starting for " + species;
-        log.info(msg);
 
         // QC
         log.debug("QC: get "+getPipelineName()+" Ids in RGD for "+species);
@@ -85,32 +83,29 @@ public class Manager {
 
         // loading
         if( !idsToBeInserted.isEmpty() ) {
-            msg = "  inserting "+getPipelineName()+" ids for "+species+": "+idsToBeInserted.size();
-            log.info(msg);
             dao.insertXdbs(idsToBeInserted);
+            msg = "inserted "+getPipelineName()+" ids for "+species+": "+idsToBeInserted.size();
+            log.info(msg);
         }
 
         if( !idsToBeDeleted.isEmpty() ) {
-            msg = "  deleting "+getPipelineName()+" ids for "+species+": "+idsToBeDeleted.size();
-            log.info(msg);
             dao.deleteXdbIds(idsToBeDeleted);
+            msg = "deleted "+getPipelineName()+" ids for "+species+": "+idsToBeDeleted.size();
+            log.info(msg);
         }
 
         if( !idsMatching.isEmpty() ) {
-            msg = "  matching "+getPipelineName()+" ids for "+species+": "+idsMatching.size();
-            log.info(msg);
             dao.updateModificationDate(idsMatching);
+            msg = "matching "+getPipelineName()+" ids for "+species+": "+idsMatching.size();
+            log.info(msg);
         }
 
         int countAdj = idsToBeInserted.size() - idsToBeDeleted.size();
         int newCount = originalCount + countAdj;
-        msg = String.format("  new total of %s ids for %s: %d (%+d)", getPipelineName(), species, newCount, countAdj);
+        msg = String.format("new total of %s ids for %s: %d (%+d)", getPipelineName(), species, newCount, countAdj);
         log.info(msg);
 
-        msg = "END: "+getPipelineName() + " ID generation complete for " + species;
-        log.info(msg);
-
-        msg = "===    time elapsed: "+ Utils.formatElapsedTime(startTime, System.currentTimeMillis());
+        msg = "END: "+getPipelineName() + " pipeline OK;  time elapsed: "+ Utils.formatElapsedTime(startTime, System.currentTimeMillis());
         log.info(msg);
 
         log.info("");
