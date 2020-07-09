@@ -1,7 +1,7 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
     <bean id="manager" class="edu.mcw.rgd.HumanProteomeMap.Manager">
-        <property name="version" value="HumanProteomeMap pipeline   -- build May 10, 2020" />
+        <property name="version" value="HumanProteomeMap pipeline   -- build Jul 09, 2020" />
         <property name="pipelineName" value="Human Proteome Map" />
     </bean>
 </beans>

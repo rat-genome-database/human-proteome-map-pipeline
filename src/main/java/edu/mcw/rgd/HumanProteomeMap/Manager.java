@@ -56,14 +56,16 @@ public class Manager {
 
         SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         log.info("   started at "+sdt.format(new Date(startTime)));
+        log.info("");
 
         String species = SpeciesType.getCommonName(speciesTypeKey);
+        log.info("Update "+getPipelineName()+" external database ids for "+species);
 
         // QC
-        log.debug("QC: get "+getPipelineName()+" Ids in RGD for "+species);
+        log.debug("QC: get "+getPipelineName()+" Ids in RGD");
         List<XdbId> idsInRgd = dao.getHumanProteomeMapIds(speciesTypeKey, getPipelineName());
         int originalCount = idsInRgd.size();
-        log.debug("QC: get incoming "+getPipelineName()+" Ids for "+species);
+        log.debug("QC: get incoming "+getPipelineName()+" Ids");
         List<XdbId> idsIncoming = getIncomingIds(speciesTypeKey);
 
         // determine to-be-inserted Human Proteome Map ids
@@ -84,28 +86,28 @@ public class Manager {
         // loading
         if( !idsToBeInserted.isEmpty() ) {
             dao.insertXdbs(idsToBeInserted);
-            msg = "inserted "+getPipelineName()+" ids for "+species+": "+idsToBeInserted.size();
+            msg = "  inserted ids : "+idsToBeInserted.size();
             log.info(msg);
         }
 
         if( !idsToBeDeleted.isEmpty() ) {
             dao.deleteXdbIds(idsToBeDeleted);
-            msg = "deleted "+getPipelineName()+" ids for "+species+": "+idsToBeDeleted.size();
+            msg = "  deleted ids : "+idsToBeDeleted.size();
             log.info(msg);
         }
 
         if( !idsMatching.isEmpty() ) {
             dao.updateModificationDate(idsMatching);
-            msg = "matching "+getPipelineName()+" ids for "+species+": "+idsMatching.size();
+            msg = "  matching ids : "+idsMatching.size();
             log.info(msg);
         }
 
         int countAdj = idsToBeInserted.size() - idsToBeDeleted.size();
         int newCount = originalCount + countAdj;
-        msg = String.format("new total of %s ids for %s: %d (%+d)", getPipelineName(), species, newCount, countAdj);
+        msg = String.format("new total of %s ids: %d (%+d)", getPipelineName(), newCount, countAdj);
         log.info(msg);
 
-        msg = "END: "+getPipelineName() + " pipeline OK;  time elapsed: "+ Utils.formatElapsedTime(startTime, System.currentTimeMillis());
+        msg = "=== OK ===  time elapsed: "+ Utils.formatElapsedTime(startTime, System.currentTimeMillis());
         log.info(msg);
 
         log.info("");
