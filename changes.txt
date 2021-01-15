@@ -1,3 +1,6 @@
+Jan 15, 2021
+  -git: renamed 'master' into 'main'
+
 Aug 03, 2020
   -renamed app name to 'human-proteome-map-pipeline' from HumanProteomeMap to align with github code
 
