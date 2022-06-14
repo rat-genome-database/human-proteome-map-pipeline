@@ -87,25 +87,25 @@ public class Manager {
         // loading
         if( !idsToBeInserted.isEmpty() ) {
             dao.insertXdbs(idsToBeInserted);
-            msg = "  inserted ids : "+idsToBeInserted.size();
+            msg = "  inserted ids : "+Utils.formatThousands(idsToBeInserted.size());
             log.info(msg);
         }
 
         if( !idsToBeDeleted.isEmpty() ) {
             dao.deleteXdbIds(idsToBeDeleted);
-            msg = "  deleted ids : "+idsToBeDeleted.size();
+            msg = "  deleted ids : "+Utils.formatThousands(idsToBeDeleted.size());
             log.info(msg);
         }
 
         if( !idsMatching.isEmpty() ) {
             dao.updateModificationDate(idsMatching);
-            msg = "  matching ids : "+idsMatching.size();
+            msg = "  matching ids : "+Utils.formatThousands(idsMatching.size());
             log.info(msg);
         }
 
         int countAdj = idsToBeInserted.size() - idsToBeDeleted.size();
         int newCount = originalCount + countAdj;
-        msg = String.format("new total of %s ids: %d (%+d)", getPipelineName(), newCount, countAdj);
+        msg = String.format("new total of %s ids: %s (change: %s)", getPipelineName(), Utils.formatThousands(newCount), Utils.formatThousands(countAdj));
         log.info(msg);
 
         msg = "=== OK ===  time elapsed: "+ Utils.formatElapsedTime(startTime, System.currentTimeMillis());
