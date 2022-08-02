@@ -1,6 +1,7 @@
-Jan 14, 2022
-  -tuned up logging
+Aug 02, 2022
+  updated dependencies
 
+Jun 14, 2022
 Mar 29, 2022
   -tuned up logging
 
@@ -26,8 +27,6 @@ v 1.0.9, Apr 26, 2019
   -improved summary
 
 v 1.0.8, Apr 17, 2019
-  -updated dependencies
-
 v 1.0.7, Feb 15, 2019
   -updated dependencies
 
