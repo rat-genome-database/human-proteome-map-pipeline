@@ -4,6 +4,7 @@ import edu.mcw.rgd.datamodel.Gene;
 import edu.mcw.rgd.datamodel.SpeciesType;
 import edu.mcw.rgd.datamodel.XdbId;
 import edu.mcw.rgd.process.Utils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -71,18 +72,15 @@ public class Manager {
 
         // determine to-be-inserted Human Proteome Map ids
         log.debug("QC: determine to-be-inserted "+getPipelineName()+" Ids");
-        List<XdbId> idsToBeInserted = new ArrayList<XdbId>(idsIncoming);
-        idsToBeInserted.removeAll(idsInRgd);
+        List<XdbId> idsToBeInserted = new ArrayList<>(CollectionUtils.subtract(idsIncoming, idsInRgd));
 
         // determine matching Human Proteome Map ids
         log.debug("QC: determine matching "+getPipelineName()+" Ids");
-        List<XdbId> idsMatching = new ArrayList<XdbId>(idsIncoming);
-        idsMatching.retainAll(idsInRgd);
+        List<XdbId> idsMatching = new ArrayList<>(CollectionUtils.intersection(idsIncoming, idsInRgd));
 
         // determine to-be-deleted Human Proteome Map ids
         log.debug("QC: determine to-be-deleted "+getPipelineName()+" Ids");
-        idsInRgd.removeAll(idsIncoming);
-        List<XdbId> idsToBeDeleted = idsInRgd;
+        List<XdbId> idsToBeDeleted = new ArrayList<>(CollectionUtils.subtract(idsInRgd, idsIncoming));
 
         // loading
         if( !idsToBeInserted.isEmpty() ) {
