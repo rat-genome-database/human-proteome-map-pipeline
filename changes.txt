@@ -1,3 +1,6 @@
+Jan 14, 2025
+  updated dependencies
+
 Dec 03, 2024
   updated to java 17
   significantly sped up qc
