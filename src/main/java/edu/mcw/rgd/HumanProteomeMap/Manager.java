@@ -3,6 +3,7 @@ package edu.mcw.rgd.HumanProteomeMap;
 import edu.mcw.rgd.datamodel.Gene;
 import edu.mcw.rgd.datamodel.SpeciesType;
 import edu.mcw.rgd.datamodel.XdbId;
+import edu.mcw.rgd.process.MemoryMonitor;
 import edu.mcw.rgd.process.Utils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -49,6 +50,9 @@ public class Manager {
     public void run(int speciesTypeKey) throws Exception {
 
         long startTime = System.currentTimeMillis();
+
+        MemoryMonitor memoryMonitor = new MemoryMonitor();
+        memoryMonitor.start();
 
         String msg = getVersion();
         log.info(msg);
@@ -105,6 +109,9 @@ public class Manager {
         int newCount = originalCount + countAdj;
         msg = String.format("new total of %s ids: %s (change: %s)", getPipelineName(), Utils.formatThousands(newCount), Utils.formatThousands(countAdj));
         log.info(msg);
+
+        memoryMonitor.stop();
+        log.info(memoryMonitor.getSummary());
 
         msg = "=== OK ===  time elapsed: "+ Utils.formatElapsedTime(startTime, System.currentTimeMillis());
         log.info(msg);
