@@ -1,7 +1,8 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
     <bean id="manager" class="edu.mcw.rgd.HumanProteomeMap.Manager">
-        <property name="version" value="human-proteome-map-pipeline   -- build Apr 17, 2026" />
+        <property name="version" value="human-proteome-map-pipeline   -- build Apr 22, 2026" />
         <property name="pipelineName" value="Human Proteome Map" />
+        <property name="staleXdbDeleteThreshold" value="5%" />
     </bean>
 </beans>

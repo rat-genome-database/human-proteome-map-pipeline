@@ -26,6 +26,7 @@ public class Manager {
     private DAO dao = new DAO();
     private String version;
     private String pipelineName;
+    private String staleXdbDeleteThreshold;
 
     Logger log = LogManager.getLogger("status");
 
@@ -93,10 +94,20 @@ public class Manager {
             log.info(msg);
         }
 
+        int deleted = 0;
         if( !idsToBeDeleted.isEmpty() ) {
-            dao.deleteXdbIds(idsToBeDeleted);
-            msg = "  deleted ids : "+Utils.formatThousands(idsToBeDeleted.size());
-            log.info(msg);
+            // convert delete-threshold string to number; i.e. '5%' --> '5'
+            int threshPerc = Integer.parseInt(staleXdbDeleteThreshold.substring(0, staleXdbDeleteThreshold.length()-1));
+            int deleteLimit = (threshPerc * originalCount) / 100;
+            log.info("  stale xdb ids delete limit ("+staleXdbDeleteThreshold+"): "+Utils.formatThousands(deleteLimit));
+            log.info("  stale xdb ids to be deleted: "+Utils.formatThousands(idsToBeDeleted.size()));
+
+            if( idsToBeDeleted.size() > deleteLimit ) {
+                log.warn("*** DELETE of stale xdb ids aborted! *** "+staleXdbDeleteThreshold+" delete threshold exceeded!");
+            } else {
+                deleted = dao.deleteXdbIds(idsToBeDeleted);
+                log.info("  deleted ids : "+Utils.formatThousands(deleted));
+            }
         }
 
         if( !idsMatching.isEmpty() ) {
@@ -105,7 +116,7 @@ public class Manager {
             log.info(msg);
         }
 
-        int countAdj = idsToBeInserted.size() - idsToBeDeleted.size();
+        int countAdj = idsToBeInserted.size() - deleted;
         int newCount = originalCount + countAdj;
         msg = String.format("new total of %s ids: %s (change: %s)", getPipelineName(), Utils.formatThousands(newCount), Utils.formatThousands(countAdj));
         log.info(msg);
@@ -150,6 +161,14 @@ public class Manager {
 
     public String getPipelineName() {
         return pipelineName;
+    }
+
+    public void setStaleXdbDeleteThreshold(String staleXdbDeleteThreshold) {
+        this.staleXdbDeleteThreshold = staleXdbDeleteThreshold;
+    }
+
+    public String getStaleXdbDeleteThreshold() {
+        return staleXdbDeleteThreshold;
     }
 }
 
