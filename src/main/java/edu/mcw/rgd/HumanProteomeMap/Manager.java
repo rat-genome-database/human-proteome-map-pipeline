@@ -81,7 +81,9 @@ public class Manager {
 
         // determine matching Human Proteome Map ids
         log.debug("QC: determine matching "+getPipelineName()+" Ids");
-        List<XdbId> idsMatching = new ArrayList<>(CollectionUtils.intersection(idsIncoming, idsInRgd));
+        // intersection(idsInRgd, idsIncoming) returns elements from idsInRgd (with acc_xdb_key set),
+        // so updateModificationDate below has real keys to update
+        List<XdbId> idsMatching = new ArrayList<>(CollectionUtils.intersection(idsInRgd, idsIncoming));
 
         // determine to-be-deleted Human Proteome Map ids
         log.debug("QC: determine to-be-deleted "+getPipelineName()+" Ids");
