@@ -1,3 +1,6 @@
+Jun 8, 2026
+  extracted hardcoded xdb key 56 into shared constant XDB_KEY_HUMAN_PROTEOME_MAP; expanded README; updated dependencies
+
 May 19, 2026
   bug fix: matching ids now actually get their modification_date refreshed (CollectionUtils.intersection arg order was returning key-less XdbId clones); updated dependencies
 

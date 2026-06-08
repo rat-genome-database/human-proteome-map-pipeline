@@ -18,6 +18,8 @@ import java.util.List;
  */
 public class DAO {
 
+    public static final int XDB_KEY_HUMAN_PROTEOME_MAP = 56;
+
     XdbIdDAO xdao = new XdbIdDAO();
     GeneDAO gdao = new GeneDAO();
 
@@ -31,7 +33,7 @@ public class DAO {
     public List<XdbId> getHumanProteomeMapIds(int speciesTypeKey, String srcPipeline) throws Exception {
 
         XdbId filter = new XdbId();
-        filter.setXdbKey(56);
+        filter.setXdbKey(XDB_KEY_HUMAN_PROTEOME_MAP);
         filter.setSrcPipeline(srcPipeline);
         return xdao.getXdbIds(filter, speciesTypeKey);
     }

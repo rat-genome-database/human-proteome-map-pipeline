@@ -141,7 +141,7 @@ public class Manager {
             x.setAccId(g.getSymbol());
             x.setSrcPipeline(getPipelineName());
             x.setRgdId(g.getRgdId());
-            x.setXdbKey(56);
+            x.setXdbKey(DAO.XDB_KEY_HUMAN_PROTEOME_MAP);
             x.setCreationDate(new Date());
             x.setModificationDate(new Date());
             incomingIds.add(x);
