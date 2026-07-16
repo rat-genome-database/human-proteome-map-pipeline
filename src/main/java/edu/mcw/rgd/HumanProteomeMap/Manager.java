@@ -28,18 +28,21 @@ public class Manager {
     private String pipelineName;
     private String staleXdbDeleteThreshold;
 
-    Logger log = LogManager.getLogger("status");
+    // NOTE: static, so it is initialized before the bean factory below: that configures log4j,
+    //       which truncates summary.log -- otherwise a failure to load the beans would leave
+    //       the previous run's summary in place, and run.sh would mail it as if all went well
+    static final Logger log = LogManager.getLogger("status");
 
     public static void main(String[] args) throws Exception {
 
-        DefaultListableBeanFactory bf = new DefaultListableBeanFactory();
-        new XmlBeanDefinitionReader(bf).loadBeanDefinitions(new FileSystemResource("properties/AppConfigure.xml"));
-        Manager manager = (Manager) (bf.getBean("manager"));
-
         try {
+            DefaultListableBeanFactory bf = new DefaultListableBeanFactory();
+            new XmlBeanDefinitionReader(bf).loadBeanDefinitions(new FileSystemResource("properties/AppConfigure.xml"));
+            Manager manager = (Manager) (bf.getBean("manager"));
+
             manager.run();
         }catch (Exception e) {
-            Utils.printStackTrace(e, manager.log);
+            Utils.printStackTrace(e, log);
             throw e;
         }
     }

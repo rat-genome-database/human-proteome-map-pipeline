@@ -1,3 +1,8 @@
+Jul 16, 2026
+  run.sh: fixed stderr redirection, so stack traces land in run.log instead of going to cron
+  failed runs now email the stack trace and exit non-zero, instead of emailing the previous run's summary
+  updated dependencies
+
 Jun 8, 2026
   extracted hardcoded xdb key 56 into shared constant XDB_KEY_HUMAN_PROTEOME_MAP; expanded README; updated dependencies
 
